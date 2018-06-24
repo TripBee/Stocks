@@ -1,0 +1,56 @@
+Sub TotalStock()
+    'Find Last Row so we can Stop the Subroutine
+    Cells(ActiveSheet.Rows.Count, 1).End(xlUp).Select
+    LastRow = ActiveCell.Row
+    
+    'Find the Last Column so we can Place the Headers
+    Cells(1, ActiveSheet.Columns.Count).End(xlToLeft).Select
+    If ActiveCell.Value <> "Total Sales" Then
+        LastColumn = ActiveCell.Column
+    Else
+        Cells(1, ActiveSheet.Columns.Count).End(xlToLeft).Offset(0, -3).Select
+        LastColumn = ActiveCell.Column
+    End If
+    
+    'Add column headers
+    Cells(1, LastColumn + 2).Value = "Ticker Types"
+    Cells(1, LastColumn + 3).Value = "Total Sales"
+    
+    'Establish a previous Ticker so that we can make a new Ticker Count
+    Dim PrevTicker As String
+    PrevTicker = 0
+
+    'Establish a Previous date so that we can continue adding the values
+    Dim PrevDate As String
+    PrevDate = 0
+
+    'Establish the starting Ticker Cell and Total Cell
+    T = 1
+    TickerCell = Cells(T, LastColumn + 2)
+    TotalCell = Cells(T, LastColumn + 3)
+    
+   
+    
+    'Scroll through all the rows (500 for now to cut testing time)
+    For y = 2 To LastRow
+         
+        'If there is a new value in the Column 1,
+        'Then Populate Ticker Cell with that value and move the Tickercell Down 1
+        If Cells(y, 1).Value <> PrevTicker Then
+            T = T + 1
+            Cells(T, LastColumn + 2).Value = Cells(y, 1).Value
+            PrevTicker = Cells(y, 1).Value
+        End If
+            
+        'If the row has a different date entry
+        'Then Add up the volume to the TotalVolume
+        If Cells(y, 2).Value <> PrevDate Then
+            Cells(T, LastColumn + 3).Value = Cells(T, LastColumn + 3).Value + Cells(y, 7).Value
+            PrevDate = Cells(y, 2).Value
+        End If
+    'loop to the next row
+    Next y
+    Cells(1, LastColumn + 2).Select
+End Sub
+
+
